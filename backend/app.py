@@ -1,5 +1,9 @@
 import os
 import sys
+
+# Add parent directory to path so imports work correctly when running directly
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from backend.config import Config
@@ -9,9 +13,6 @@ from backend.routes.appointments import appointments_bp
 from backend.routes.medications import medications_bp
 from backend.routes.notes import notes_bp
 from backend.routes.summary import summary_bp
-
-# Add parent directory to path so imports work correctly when running directly
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Set frontend directory path relative to this app file
 frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
