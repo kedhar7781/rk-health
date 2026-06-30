@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  rk-health-app:
+    build: .
+    container_name: rk_health_app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      # Persistent SQLite DB volumes mount
+      - ./backend:/app/backend
+    restart: unless-stopped

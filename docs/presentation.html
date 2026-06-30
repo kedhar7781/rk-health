@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK Health - AI Smart Patient Portal Presentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --bg-dark: #080d1a;
+            --bg-slide: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #4f46e5;
+            --accent-hover: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .presentation-container {
+            width: 90vw;
+            height: 80vh;
+            max-width: 1100px;
+            position: relative;
+            perspective: 1500px;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-slide);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 50px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: rotateY(90deg) scale(0.9);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: rotateY(0deg) scale(1);
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        /* Slide Header */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        .slide-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slide-title i {
+            color: var(--accent);
+        }
+
+        .slide-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        /* Slide Body Content */
+        .slide-body {
+            flex: 1;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .slide-text {
+            flex: 1;
+        }
+
+        .slide-text h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: var(--accent-hover);
+        }
+
+        .slide-text p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .slide-bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .slide-bullets li {
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slide-bullets li i {
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        .slide-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            height: 100%;
+            padding: 30px;
+        }
+
+        /* Title Slide Custom Body */
+        .title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-main) 30%, var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .title-slide h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .title-slide .badge-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tech-badge {
+            background-color: var(--border);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Diagram / Flowchart CSS for Slide */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .flow-node {
+            background: rgba(79, 70, 229, 0.15);
+            border: 1.5px solid var(--accent);
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin: -6px 0;
+        }
+
+        .grid-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .grid-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .grid-item h4 {
+            color: var(--accent-hover);
+            margin-bottom: 8px;
+        }
+
+        /* Slide Footer */
+        .slide-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Navigation Controls */
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 30px;
+            z-index: 10;
+        }
+
+        .control-btn {
+            background-color: var(--bg-slide);
+            border: 1px solid var(--border);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .slide-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: var(--accent);
+            width: 25px;
+            border-radius: 5px;
+        }
+
+        .keyboard-hint {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Welcome -->
+        <div class="slide title-slide active">
+            <div class="auth-logo" style="width:72px; height:72px; background:linear-gradient(135deg, var(--accent), var(--accent-hover)); border-radius:18px; display:inline-flex; align-items:center; justify-content:center; color:white; font-size:2.5rem; margin-bottom:24px; box-shadow:0 10px 25px rgba(79, 70, 229, 0.4);">
+                <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <h1>RK Health</h1>
+            <h2>AI Smart Patient Appointment & Medication Reminder System</h2>
+            
+            <div class="badge-container">
+                <span class="tech-badge"><i class="fa-brands fa-python"></i> Flask Server</span>
+                <span class="tech-badge"><i class="fa-brands fa-square-js"></i> Vanilla JS</span>
+                <span class="tech-badge"><i class="fa-solid fa-cloud"></i> Google Sheets DB</span>
+                <span class="tech-badge"><i class="fa-solid fa-calendar-days"></i> Google Calendar</span>
+                <span class="tech-badge"><i class="fa-solid fa-comment-sms"></i> Twilio SMS</span>
+                <span class="tech-badge"><i class="fa-solid fa-brain"></i> Llama/Grok AI</span>
+            </div>
+            
+            <div class="slide-footer" style="width:100%; margin-top:50px;">
+                <span>RK Health Portal Project Showcase</span>
+                <span>Slide 1 of 6</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Core Problem & Solution -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-circle-exclamation"></i> Problem & Solution</h2>
+                <span class="slide-subtitle">Overview</span>
+            </div>
+            <div class="slide-body">
+                <div class="slide-text">
+                    <h3>Empowering Patient Compliance</h3>
+                    <p>Patients manage complex schedules across medical disciplines, leading to high non-adherence and missed critical details.</p>
+                    <ul class="slide-bullets">
+                        <li><i class="fa-solid fa-check"></i> <strong>Medication schedules</strong> are managed via visual compliance badges.</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Missed appointments</strong> are eliminated using SMS notification gates.</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Complex diagnoses</strong> are translated using local LLM summarization.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual">
+                    <div class="grid-visual">
+                        <div class="grid-item">
+                            <h4>Compliance Triggers</h4>
+                            <p style="font-size:0.85rem; margin-top:8px;">Twilio schedules reminders to alert phones at specified hour blocks daily.</p>
+                        </div>
+                        <div class="grid-item">
+                            <h4>Google Integrations</h4>
+                            <p style="font-size:0.85rem; margin-top:8px;">Updates are logged directly into Google spreadsheet database and calendars.</p>
+                        </div>
+                        <div class="grid-item" style="grid-column: 1/-1;">
+                            <h4>AI Translation Bridge</h4>
+                            <p style="font-size:0.85rem; margin-top:8px;">Aggregates records, identifies side effects, and outputs preventative guidelines.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <span>RK Health Project Presentation</span>
+                <span>Slide 2 of 6</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: System Architecture -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-sitemap"></i> System Architecture</h2>
+                <span class="slide-subtitle">Design Blueprint</span>
+            </div>
+            <div class="slide-body">
+                <div class="slide-text">
+                    <h3>Modular Service Design</h3>
+                    <p>RK Health splits responsibilities between local sandboxed servers and cloud microservices via an Apps Script Gateway.</p>
+                    <ul class="slide-bullets">
+                        <li><i class="fa-solid fa-shield-halved"></i> <strong>Security first</strong>: Secrets are isolated in backend environment files.</li>
+                        <li><i class="fa-solid fa-network-wired"></i> <strong>Decoupled structure</strong>: Sheets database runs independently.</li>
+                        <li><i class="fa-solid fa-circle-nodes"></i> <strong>Fallback mechanics</strong>: The server falls back to SQLite offline modes if APIs fail.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual">
+                    <div class="flowchart">
+                        <div class="flow-node" style="background:rgba(255,255,255,0.02); border-color:var(--border);">Web Dashboard UI</div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-down-long"></i></div>
+                        <div class="flow-node">Flask Backend (SQL & APIs)</div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-down-long"></i></div>
+                        <div class="flow-node" style="background:rgba(16,185,129,0.15); border-color:var(--success);">Apps Script REST Gateway</div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-down-long"></i></div>
+                        <div class="flow-node" style="background:rgba(245,158,11,0.15); border-color:var(--warning);">Google Sheets & Calendar</div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <span>RK Health Project Presentation</span>
+                <span>Slide 3 of 6</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: Database & APIs -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-code"></i> Database & REST APIs</h2>
+                <span class="slide-subtitle">Backend Layer</span>
+            </div>
+            <div class="slide-body">
+                <div class="slide-text">
+                    <h3>Secure & Standard API contracts</h3>
+                    <p>Features standard HTTP responses and password encryption.</p>
+                    <ul class="slide-bullets">
+                        <li><i class="fa-solid fa-code-branch"></i> <strong>/api/auth</strong>: Password hashing and session management.</li>
+                        <li><i class="fa-solid fa-code-branch"></i> <strong>/api/appointments</strong>: Supports search query matching.</li>
+                        <li><i class="fa-solid fa-code-branch"></i> <strong>/api/medications</strong>: Regimen scheduler and phone validation.</li>
+                        <li><i class="fa-solid fa-code-branch"></i> <strong>/api/summary</strong>: Stats aggregator and AI text client.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual" style="flex-direction:column; align-items:flex-start; font-family:monospace; font-size:0.85rem; color:var(--text-muted); overflow-y:auto;">
+                    <span style="color:var(--success);">// Local SQLite Schema</span><br>
+                    <span style="color:var(--text-main);">CREATE TABLE medications (</span><br>
+                    &nbsp;&nbsp;id INTEGER PRIMARY KEY,<br>
+                    &nbsp;&nbsp;user_id INTEGER REFERENCES users(id),<br>
+                    &nbsp;&nbsp;medicine_name TEXT NOT NULL,<br>
+                    &nbsp;&nbsp;dosage TEXT,<br>
+                    &nbsp;&nbsp;frequency TEXT,<br>
+                    &nbsp;&nbsp;reminder_time TEXT,<br>
+                    &nbsp;&nbsp;status TEXT DEFAULT 'Active',<br>
+                    &nbsp;&nbsp;phone_reminder INTEGER DEFAULT 0<br>
+                    );
+                </div>
+            </div>
+            <div class="slide-footer">
+                <span>RK Health Project Presentation</span>
+                <span>Slide 4 of 6</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: Twilio & AI Highlights -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Twilio & AI Summaries</h2>
+                <span class="slide-subtitle">Clinical Integrations</span>
+            </div>
+            <div class="slide-body">
+                <div class="slide-text">
+                    <h3>Generative Medical Translation</h3>
+                    <p>Translates complex diagnostics into encouraging, easy-to-understand preventative health cards.</p>
+                    <ul class="slide-bullets">
+                        <li><i class="fa-solid fa-brain"></i> <strong>Smart Diagnostic Translation</strong>: Explains terms like ECG.</li>
+                        <li><i class="fa-solid fa-prescription-bottle-medical"></i> <strong>Active Pills Routine</strong>: Schedules timings.</li>
+                        <li><i class="fa-solid fa-comment-sms"></i> <strong>Twilio validation</strong>: Sanitizes phone formats to avoid SMS drops.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual" style="flex-direction:column; padding:20px; font-size:0.9rem;">
+                    <div style="border-left: 3px solid var(--accent); padding-left: 14px; margin-bottom: 12px; background:rgba(255,255,255,0.01); border-radius: 0 8px 8px 0; padding:12px;">
+                        <h5 style="color:var(--text-main); font-weight:600;"><i class="fa-solid fa-envelope-open-text"></i> Patient Visit Summary</h5>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin: 6px 0 0 0;">"You currently have cardiology ECG reviews scheduled.BP tracking is running..."</p>
+                    </div>
+                    <div style="border-left: 3px solid var(--success); padding-left: 14px; background:rgba(255,255,255,0.01); border-radius: 0 8px 8px 0; padding:12px; width: 100%;">
+                        <h5 style="color:var(--text-main); font-weight:600;"><i class="fa-solid fa-mobile-screen"></i> SMS Reminder body</h5>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin: 6px 0 0 0;">"RK Health: Hi admin, it is time to take your Lisinopril (10mg) scheduled for 08:00."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <span>RK Health Project Presentation</span>
+                <span>Slide 5 of 6</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: Setup & Execution -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-terminal"></i> Quick Execution</h2>
+                <span class="slide-subtitle">Deployment</span>
+            </div>
+            <div class="slide-body">
+                <div class="slide-text">
+                    <h3>Spin Up in Under 2 Minutes</h3>
+                    <p>Available on Docker and local environments.</p>
+                    <ul class="slide-bullets">
+                        <li><i class="fa-solid fa-folder-open"></i> <strong>Step 1</strong>: copy `.env.example` to `.env` and configure keys.</li>
+                        <li><i class="fa-solid fa-play"></i> <strong>Step 2</strong>: Run `python backend/app.py` or compose.</li>
+                        <li><i class="fa-solid fa-globe"></i> <strong>Step 3</strong>: Visit `http://localhost:5000` to interact.</li>
+                    </ul>
+                </div>
+                <div class="slide-visual" style="flex-direction:column; align-items:flex-start; justify-content:center; gap: 14px;">
+                    <div style="background:var(--bg-dark); border:1px solid var(--border); padding: 12px; border-radius:8px; font-family:monospace; font-size:0.8rem; width:100%;">
+                        <span style="color:var(--text-muted);">$</span> pip install -r requirements.txt<br>
+                        <span style="color:var(--text-muted);">$</span> python backend/app.py
+                    </div>
+                    <div style="background:var(--bg-dark); border:1px solid var(--border); padding: 12px; border-radius:8px; font-family:monospace; font-size:0.8rem; width:100%;">
+                        <span style="color:var(--text-muted);">$</span> docker-compose up --build
+                    </div>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <span>RK Health Project Presentation</span>
+                <span>Slide 6 of 6</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation Controls UI -->
+    <div class="controls">
+        <button class="control-btn" id="prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="slide-dots" id="dots-container"></div>
+        <button class="control-btn" id="next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    
+    <div class="keyboard-hint">
+        Use Left/Right arrow keys on keyboard to navigate slides
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dotsContainer = document.getElementById('dots-container');
+        
+        let currentSlideIdx = 0;
+        
+        // Generate Dots
+        slides.forEach((slide, idx) => {
+            const dot = document.createElement('div');
+            dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+            dot.addEventListener('click', () => showSlide(idx));
+            dotsContainer.appendChild(dot);
+        });
+        
+        const dots = document.querySelectorAll('.dot');
+        
+        function showSlide(index) {
+            slides[currentSlideIdx].classList.remove('active');
+            dots[currentSlideIdx].classList.remove('active');
+            
+            currentSlideIdx = index;
+            if (currentSlideIdx < 0) currentSlideIdx = slides.length - 1;
+            if (currentSlideIdx >= slides.length) currentSlideIdx = 0;
+            
+            slides[currentSlideIdx].classList.add('active');
+            dots[currentSlideIdx].classList.add('active');
+        }
+        
+        prevBtn.addEventListener('click', () => {
+            showSlide(currentSlideIdx - 1);
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            showSlide(currentSlideIdx + 1);
+        });
+        
+        // Keyboard Listener
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') showSlide(currentSlideIdx + 1);
+            if (e.key === 'ArrowLeft') showSlide(currentSlideIdx - 1);
+        });
+    </script>
+</body>
+</html>
